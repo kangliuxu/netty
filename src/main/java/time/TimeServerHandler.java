@@ -14,13 +14,12 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 public class TimeServerHandler extends ChannelInboundHandlerAdapter {
     
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(final ChannelHandlerContext ctx) throws Exception {
          final ByteBuf time=  ctx.alloc().buffer(4);
          time.writeInt((int) (System.currentTimeMillis()/1000L+2208988800L));
         final ChannelFuture f = ctx.writeAndFlush(time); // (3)
 
         f.addListener(new ChannelFutureListener() {
-            @Override
             public void operationComplete(ChannelFuture future) throws Exception {
                 assert f == future;
                 ctx.close();
